@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-
+import '../model/modelo.dart';
 class Formulario extends StatefulWidget {
 
   final int index;
@@ -14,14 +14,15 @@ class Formulario extends StatefulWidget {
 }
 
 class _FormularioState extends State<Formulario> {
-  //final nombreController = TextEditingController();
-  // aulaController = TextEditingController();
+  TextEditingController asignaturaController = new TextEditingController();
+  TextEditingController aulaController = new TextEditingController();
+  
   String dropdownValue = 'BAT';
   
   // create some values
   Color pickerColor = Color(0xff009688);
   Color currentColor = Color(0xff009688);
-  String guardar = 'BI';
+  String guardar = 'BAT';
 
   // ValueChanged<Color> callback
   void changeColor(Color color) {
@@ -31,6 +32,9 @@ class _FormularioState extends State<Formulario> {
   void guardarHora(String value){
     guardar = value;
   }
+
+  //var data = new Data();
+  
   
   @override
   Widget build(BuildContext context) {
@@ -41,7 +45,6 @@ class _FormularioState extends State<Formulario> {
       backgroundColor: Colors.teal[200],
       body: SingleChildScrollView(
         child: Container(
-
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: <Widget>[
@@ -52,7 +55,9 @@ class _FormularioState extends State<Formulario> {
                 child: Container(child: Text("HORA SELECCIONADO: ${widget.hora}", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 16)),)
               ),
               TextFormField(
+                controller: asignaturaController, 
                 decoration: InputDecoration(
+                  hintText: '',
                   icon: Icon(
                     Icons.border_color,
                     color: Colors.teal,
@@ -63,7 +68,9 @@ class _FormularioState extends State<Formulario> {
                 //controller: nombreController,
               ),
               TextFormField(
+                controller: aulaController,
                 decoration: InputDecoration(
+                  hintText: '',
                   icon: Icon(
                     Icons.supervisor_account,
                     color: Colors.teal,
@@ -108,8 +115,7 @@ class _FormularioState extends State<Formulario> {
                             onTap: () {
                               guardarHora(value);
                             },
-                          child: Text(value, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.teal, fontSize: 16),
-                          ),
+                          child: Text(value, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.teal, fontSize: 16),),
                           ),
                         );
                       })
@@ -135,27 +141,28 @@ class _FormularioState extends State<Formulario> {
                   shape: CircleBorder(),
                   onPressed: () {
                     showDialog(
-                        context: context,
-                        child: AlertDialog(
-                          title: Text("¡Elige un color!"),
-                          content: SingleChildScrollView(
-                            child: ColorPicker(
-                              pickerColor: pickerColor,
-                              onColorChanged: changeColor,
-                              showLabel: true,
-                              pickerAreaHeightPercent: 0.8,
-                            ),
+                      context: context,
+                      child: AlertDialog(
+                        title: Text("¡Elige un color!"),
+                        content: SingleChildScrollView(
+                          child: ColorPicker(
+                            pickerColor: pickerColor,
+                            onColorChanged: changeColor,
+                            showLabel: true,
+                            pickerAreaHeightPercent: 0.8,
                           ),
-                          actions: <Widget>[
-                            FlatButton(
-                              child: const Text('Seleccionar'),
-                              onPressed: () {
-                                setState(() => currentColor = pickerColor);
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        ));
+                        ),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: const Text('Seleccionar'),
+                            onPressed: () {
+                              setState(() => currentColor = pickerColor);
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      )
+                    );
                   },)
                 )
               ),
@@ -164,9 +171,17 @@ class _FormularioState extends State<Formulario> {
                 child: RaisedButton(
                   child: Text("Guardar Horario"),
                   onPressed:(){
-                    print(guardar);
+                    // data = Data(
+                    //   color: currentColor,
+                    //   index: widget.index,
+                    //   horaTotal: guardar,
+                    //   hora: widget.hora,
+                    //   asignatura: asignaturaController.text,
+                    //   aula: aulaController.text
+                    // );
+                    //print(guardar);
                     //final Color color = currentColor;
-                    Navigator.of(context).pop([currentColor, widget.index, guardar, widget.hora]);
+                    Navigator.of(context).pop([currentColor, widget.index, guardar, widget.hora, asignaturaController.text, aulaController.text]);
                   }
                 )
               ), 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto1/model/modelo.dart';
 import 'package:proyecto1/widget/formulario.dart';
 
 
@@ -16,6 +17,8 @@ class _ContadorWidgetState extends State<GridWidget> {
   int _index = 0;
   String _guardar;
   String _hora;
+  String _asignatura;
+  String _aula;
 
  ponerColor(Color color, int index, int _index, String _guardar, String _hora){
     if(_hora == '10:45'){
@@ -40,8 +43,15 @@ class _ContadorWidgetState extends State<GridWidget> {
       }
     }
   }
-  
 
+  pasarDatos(int index, int _index, String _asignatura, String _aula){
+    if(_index == index){
+      return _asignatura +" "+ _aula;
+    }else{
+      return "";
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
 
@@ -50,6 +60,33 @@ class _ContadorWidgetState extends State<GridWidget> {
     const colorBordeDias = [800,800,800,800,200,200,200,200];
     const colorDias = [100,300,400,500,600,700,800,900];
     const colorHoras = [300,600,300,600,300,600,300,600];
+
+    var datosArray = <Data>[];
+    for(int i=0; i<72; i++){
+      datosArray.add(Data(Colors.white.withOpacity(0.3),"","","",""));
+    }
+    guardarDatos(Color color, int _index, String _horaTotal, String _asignatura, String _aula, String _hora){
+      setState(() {
+        datosArray[_index] = Data(color, _horaTotal, _hora, _asignatura, _aula); 
+        print(_index);
+        print(datosArray[_index].color);
+        print(datosArray[_index].asignatura);
+        print(datosArray[_index].aula);
+        print(datosArray[_index].horaTotal);  
+      });
+      print("Prueba");
+      print(datosArray[9].color);
+      print(datosArray[9].asignatura);
+      print(datosArray[10].color);
+      print(datosArray[10].asignatura);
+    }
+    
+    // const guardarColor = [];
+    // const guardarIndex = [];
+    // const guardarHoraTotal = [];
+    // const guardarHora = [];
+    // const guardarAsignatura = [];
+    // const guardarAula = [];
 
     return Container(
       //height: MediaQuery.of(context).size.height,
@@ -109,31 +146,40 @@ class _ContadorWidgetState extends State<GridWidget> {
               )
             );      
           }else{
-            return Container(
-              child: InkWell(
-                child: Container(
-                  color: ponerColor(miColor, index, _index, _guardar, _hora),
-                  margin: EdgeInsets.all(0),
-                  width: 60,
-                  height: 60,
-                  child: Text("", style: TextStyle(color: Colors.black),),
-                ),
-                //onTap: ,
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Formulario(index, horas[(index/8-1).truncate().toInt()], dias[(index%8).truncate().toInt()]),
-                  )).then((result) {
-                    setState(() {
-                      miColor = result[0];
-                      _index = result[1];
-                      _guardar = result[2];
-                      _hora = result[3];
-                      //Colors.white.withOpacity(0.3);  
+            for(int i=0; i<datosArray.length;i++){
+              //if(i==_index){
+                return Container(
+                child: InkWell(
+                  child: Container(
+                    color: ponerColor(miColor, index, _index, _guardar, _hora),//datosArray[i].color,
+                    margin: EdgeInsets.all(0),
+                    width: 60,
+                    height: 60,
+                    child: Center(child:Text(pasarDatos(index, _index, _asignatura, _aula),/*datosArray[9].asignatura + datosArray[i].aula,*/ style: TextStyle(color: Colors.black),),),
+                  ),
+                  //onTap: ,
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => Formulario(index, horas[(index/8-1).truncate().toInt()], dias[(index%8).truncate().toInt()]),
+                    )).then((result) {
+                      setState(() {
+                        miColor = result[0];
+                        _index = result[1];
+                        _guardar = result[2];
+                        _hora = result[3];
+                        _asignatura = result[4];
+                        _aula = result[5];
+                        guardarDatos(miColor, _index, _guardar, _asignatura, _aula, _hora);
+                        //Colors.white.withOpacity(0.3);  
+                      });
+                      // guardarColor.add(_index);
+                      // print(guardarColor);
                     });
-                  });
-                }, 
-              ),
-            );
+                  }, 
+                ),
+                );
+              //}
+            }
           }
         }),
       ),
